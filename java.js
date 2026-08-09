@@ -54,34 +54,75 @@ buttons.forEach((button) => {
 
         else if ("+-x÷".includes(button.textContent))
         {
-            operator_click = true;
+            // say if we already clicked 1+1, if we click "-" after, evaluate 1+1 first
+            // check if we clicked an operator button a second time
+            // we also want to set the result of previous expression as first_num
+            // still check which symbol we pressed, so that we can populate the operator varaible
+            // we would then have first_num, operator so far
+            // operator_click will still be true, so next time we click a number, it will populate second_num.
+            // then we can press equals and evaluate the second expression 
+        
+            if (operator_click === true)
+            {
+                let result = operate(operator, Number(first_num), Number(second_num));
+                console.log(result);
+                first_num = result;
+                second_num = "";
 
-            if (button.textContent == "+")
-            {
-                operator = add;
+                if (button.textContent == "+")
+                {
+                    operator = add;
+                }
+                else if (button.textContent == "-")
+                {
+                    operator = subtract;
+                }
+                else if (button.textContent == "x")
+                {
+                    operator = multiply;
+                }
+                else if (button.textContent == "÷")
+                {
+                    operator = divide;
+                }
+                console.log(operator);
+                console.log(operator_click);
             }
-            else if (button.textContent == "-")
+
+            else
             {
-                operator = subtract;
+                operator_click = true;
+
+                if (button.textContent == "+")
+                {
+                    operator = add;
+                }
+                else if (button.textContent == "-")
+                {
+                    operator = subtract;
+                }
+                else if (button.textContent == "x")
+                {
+                    operator = multiply;
+                }
+                else if (button.textContent == "÷")
+                {
+                    operator = divide;
+                }
+                console.log(operator);
+                console.log(operator_click);
             }
-            else if (button.textContent == "x")
-            {
-                operator = multiply;
-            }
-            else if (button.textContent == "÷")
-            {
-                operator = divide;
-            }
-            console.log(operator);
-            console.log(operator_click);
         }
 
+        // if press equals, evaluate the expression
+        // what if you do 1 + 1 = 2 + smth? That functionality was not specified in the instructions, so thats chill
         else if (button.textContent == "=")
         {
             let result = operate(operator, Number(first_num), Number(second_num));
+            operator_click = false;
+            first_num = "";
+            second_num = "";
             console.log(result);
-
-
         }
     });
 });
