@@ -22,9 +22,9 @@ function divide(x, y)
 
 // 2. operation variables
 
-let first_num;
-let operator;
-let second_num;
+let first_num = "";
+let operator = "";
+let second_num = "";
 
 // 3. function operate
 
@@ -34,18 +34,61 @@ function operate(op, x, y)
 }
 
 // 5. functions to update number variables
-// when a number is clicked, add the number associated with the button to a variable
-// when an operator button is clicked, change first_num to be that number, so that if you enter two nums in a row, it will add them both to the variable
-// then the operator variable is updated
-// ex// if + is clicked, assign operator to be +
-// then click the next num, and assign second_num to be that value
-// once the variables are assigned, check if the operator is +, -, x, or /. If +, apply add function to first_num and second_num for instance
-// search up how to dynamically display all of these 
 
-// can do a while loop, while the number is being clicked, keep updating first_num
-// once an operator is clicked, exit loop and update the operator variable
-// then do another while loop and apply it to the second_num, but this time break when you press =
-// whole goal is to populate the variables and then input them into their corresponding arguments in the operate function
+const buttons = document.querySelectorAll("button");
+let operator_click = false;
+
+buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+        if (operator_click === true && "0123456789".includes(button.textContent))
+        {
+            second_num += button.textContent; 
+            console.log(second_num);   
+        }
+
+        else if (operator_click === false && "0123456789".includes(button.textContent))
+        {
+            first_num += button.textContent;
+            console.log(first_num);
+        }
+
+        else if ("+-x÷".includes(button.textContent))
+        {
+            operator_click = true;
+
+            if (button.textContent == "+")
+            {
+                operator = add;
+            }
+            else if (button.textContent == "-")
+            {
+                operator = subtract;
+            }
+            else if (button.textContent == "x")
+            {
+                operator = multiply;
+            }
+            else if (button.textContent == "÷")
+            {
+                operator = divide;
+            }
+            console.log(operator);
+            console.log(operator_click);
+        }
+
+        else if (button.textContent == "=")
+        {
+            let result = operate(operator, Number(first_num), Number(second_num));
+            console.log(result);
+
+
+        }
+    });
+});
 
 
 
+// when we get 1 + 1 - smth, we need to make it so that when we hit "-", it also evaluates the previous expression
+// try using the true/false, if operator is true, meaning we clicked it before, the next time we click it (when it is true), we treat it as an equal sign.
+// in other words, if operator === false, clicking the operator will store the operator in that variable and set it equal to true,
+// but clicking it again (when it is true) will treat it as an equal sign and evaluate the previous expression. Then, set it back to false.
