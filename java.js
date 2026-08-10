@@ -35,21 +35,37 @@ function operate(op, x, y)
 
 // 5. functions to update number variables
 
+const display = document.querySelector("input");
+display.value = "";
+
 const buttons = document.querySelectorAll("button");
 let operator_click = false;
+let equals_click = false;
 
 buttons.forEach((button) => {
     button.addEventListener("click", function () {
-        if (operator_click === true && "0123456789".includes(button.textContent))
+        if (equals_click === false && operator_click === true && "0123456789".includes(button.textContent))
         {
+            display.value += " " + button.textContent;
+
             second_num += button.textContent; 
             console.log(second_num);   
         }
 
-        else if (operator_click === false && "0123456789".includes(button.textContent))
+        else if (equals_click === false && operator_click === false && "0123456789".includes(button.textContent))
         {
+            display.value += button.textContent;
+
             first_num += button.textContent;
             console.log(first_num);
+        }
+
+        else if (equals_click === true)
+        {
+            first_num = button.textContent;
+            second_num = "";
+            display.value = first_num;
+            equals_click = false;
         }
 
         else if ("+-x÷".includes(button.textContent))
@@ -57,7 +73,7 @@ buttons.forEach((button) => {
             // say if we already clicked 1+1, if we click "-" after, evaluate 1+1 first
             // check if we clicked an operator button a second time
             // we also want to set the result of previous expression as first_num
-            // still check which symbol we pressed, so that we can populate the operator varaible
+            // still check which symbol we pressed, so that we can populate the operator variable
             // we would then have first_num, operator so far
             // operator_click will still be true, so next time we click a number, it will populate second_num.
             // then we can press equals and evaluate the second expression 
@@ -65,6 +81,7 @@ buttons.forEach((button) => {
             if (operator_click === true)
             {
                 let result = operate(operator, Number(first_num), Number(second_num));
+                display.value = result + " " + button.textContent;
                 console.log(result);
                 first_num = result;
                 second_num = "";
@@ -91,6 +108,7 @@ buttons.forEach((button) => {
 
             else
             {
+                display.value += " " + button.textContent;
                 operator_click = true;
 
                 if (button.textContent == "+")
@@ -119,17 +137,33 @@ buttons.forEach((button) => {
         else if (button.textContent == "=")
         {
             let result = operate(operator, Number(first_num), Number(second_num));
+            display.value = result;
+
+            if (operator == divide && second_num == '0')
+            {
+                display.value = "Undefined";
+            }
+
             operator_click = false;
             first_num = "";
             second_num = "";
+            equals_click = true;
+            
             console.log(result);
+            
+        }
+
+        else if (button.textContent == "AC")
+        {
+            display.value = "";
+            first_num = "";
+            second_num = "";
         }
     });
 });
 
+// Working the display
 
+// need to select the input tag
+// use the value property to manipulate the textbox
 
-// when we get 1 + 1 - smth, we need to make it so that when we hit "-", it also evaluates the previous expression
-// try using the true/false, if operator is true, meaning we clicked it before, the next time we click it (when it is true), we treat it as an equal sign.
-// in other words, if operator === false, clicking the operator will store the operator in that variable and set it equal to true,
-// but clicking it again (when it is true) will treat it as an equal sign and evaluate the previous expression. Then, set it back to false.
