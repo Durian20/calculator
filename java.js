@@ -40,32 +40,37 @@ display.value = "";
 
 const buttons = document.querySelectorAll("button");
 let operator_click = false;
-let equals_click = false;
+let result;
+let restart = false;
+
 
 buttons.forEach((button) => {
     button.addEventListener("click", function () {
-        if (equals_click === false && operator_click === true && "0123456789".includes(button.textContent))
+        if (restart === false && operator_click === true && "0123456789".includes(button.textContent))
         {
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
             display.value += " " + button.textContent;
 
             second_num += button.textContent; 
-            console.log(second_num);   
+            console.log(result + "," + first_num + "," + second_num + "," + operator); 
         }
 
-        else if (equals_click === false && operator_click === false && "0123456789".includes(button.textContent))
+        else if (restart === false && operator_click === false && "0123456789".includes(button.textContent))
         {
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
             display.value += button.textContent;
 
             first_num += button.textContent;
-            console.log(first_num);
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
         }
 
-        else if (equals_click === true)
+        else if (restart === true && "0123456789".includes(button.textContent))
         {
             first_num = button.textContent;
             second_num = "";
             display.value = first_num;
-            equals_click = false;
+            restart = false;
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
         }
 
         else if ("+-x÷".includes(button.textContent))
@@ -80,30 +85,44 @@ buttons.forEach((button) => {
         
             if (operator_click === true)
             {
-                let result = operate(operator, Number(first_num), Number(second_num));
-                display.value = result + " " + button.textContent;
-                console.log(result);
-                first_num = result;
-                second_num = "";
+                result = operate(operator, Number(first_num), Number(second_num));
 
-                if (button.textContent == "+")
+                if (operator == divide && second_num == '0')
                 {
-                    operator = add;
+                    display.value = "undefined";
+
+                    result = "";
+                    first_num = "";
+                    second_num = "";
+
+                    restart = true;
+                    console.log(result + "," + first_num + "," + second_num + "," + operator);
                 }
-                else if (button.textContent == "-")
+
+                else 
                 {
-                    operator = subtract;
+                    display.value = result + " " + button.textContent;
+                    first_num = result;
+                    second_num = "";
+
+                    if (button.textContent == "+")
+                    {
+                        operator = add;
+                    }
+                    else if (button.textContent == "-")
+                    {
+                        operator = subtract;
+                    }
+                    else if (button.textContent == "x")
+                    {
+                        operator = multiply;
+                    }
+                    else if (button.textContent == "÷")
+                    {
+                        operator = divide;
+                    }
+                    console.log(result + "," + first_num + "," + second_num + "," + operator);
                 }
-                else if (button.textContent == "x")
-                {
-                    operator = multiply;
-                }
-                else if (button.textContent == "÷")
-                {
-                    operator = divide;
-                }
-                console.log(operator);
-                console.log(operator_click);
             }
 
             else
@@ -127,8 +146,7 @@ buttons.forEach((button) => {
                 {
                     operator = divide;
                 }
-                console.log(operator);
-                console.log(operator_click);
+                console.log(result + "," + first_num + "," + second_num + "," + operator);
             }
         }
 
@@ -136,20 +154,22 @@ buttons.forEach((button) => {
         // what if you do 1 + 1 = 2 + smth? That functionality was not specified in the instructions, so thats chill
         else if (button.textContent == "=")
         {
-            let result = operate(operator, Number(first_num), Number(second_num));
+            result = operate(operator, Number(first_num), Number(second_num));
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
             display.value = result;
 
             if (operator == divide && second_num == '0')
             {
-                display.value = "Undefined";
+                display.value = "undefined";
+                // result = "";
             }
 
             operator_click = false;
             first_num = "";
             second_num = "";
-            equals_click = true;
+            restart = true;
             
-            console.log(result);
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
             
         }
 
@@ -158,12 +178,10 @@ buttons.forEach((button) => {
             display.value = "";
             first_num = "";
             second_num = "";
+            console.log(result + "," + first_num + "," + second_num + "," + operator);
         }
     });
 });
 
-// Working the display
 
-// need to select the input tag
-// use the value property to manipulate the textbox
 
